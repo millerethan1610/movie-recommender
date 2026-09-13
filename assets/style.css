@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
+:root { --ink: #f2efe7; --paper: #0d1117; --panel: #151b23; --panel-light: #1d2631; --gold: #d7a84d; --gold-bright: #f0c76b; --muted: #98a1ad; --line: #303a46; }
+.stApp { background: radial-gradient(circle at 85% 8%, #1b2838 0, transparent 30%), var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+.block-container { max-width: 1120px; padding: 2rem 3rem 5rem; }
+.topbar { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 1.2rem; }
+.brand { font-size: 1.4rem; font-weight: 700; letter-spacing: -.04em; }
+.brand span { color: var(--gold-bright); }
+.topbar-note, .eyebrow, .hero-footer { color: var(--muted); font-family: 'DM Mono', monospace; font-size: .68rem; letter-spacing: .12em; }
+.hero { min-height: 58vh; padding: 12vh 0 3rem; background: radial-gradient(circle at 78% 45%, #253c4e 0, transparent 27%), linear-gradient(135deg, transparent 65%, #17212c 65%); }
+.hero h1 { font-size: clamp(3.5rem, 8vw, 7.4rem); line-height: .96; letter-spacing: -.07em; margin: 1rem 0 2rem; max-width: 850px; }
+.hero h1 em { color: var(--gold-bright); font-family: 'Playfair Display', serif; font-weight: 600; }
+.hero-copy { max-width: 420px; color: #c0c7cf; font-size: 1.05rem; line-height: 1.6; }
+.hero-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 1rem; }
+.page-title { font-size: 3rem; letter-spacing: -.06em; margin: .3rem 0 .2rem; }
+.results-heading { display: flex; align-items: baseline; justify-content: space-between; margin: 3rem 0 1.2rem; border-bottom: 2px solid var(--gold); }
+.results-heading h2 { font-size: 2rem; letter-spacing: -.05em; margin-bottom: .5rem; }
+.results-heading span { font-family: 'DM Mono', monospace; font-size: .72rem; }
+.movie-title { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.movie-title h3 { font-size: 1.5rem; letter-spacing: -.04em; margin: 0; }
+.movie-title span { color: var(--gold-bright); font-family: 'DM Mono', monospace; font-size: .75rem; white-space: nowrap; }
+.poster-placeholder { aspect-ratio: 2 / 3; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; padding: 1rem; background: radial-gradient(circle at 75% 20%, #526b78 0, transparent 27%), linear-gradient(145deg, #26394a, #111820 72%); color: var(--gold-bright); font-family: 'DM Mono', monospace; border: 1px solid var(--line); box-shadow: 0 12px 28px rgba(0, 0, 0, .25); overflow: hidden; }
+.poster-kicker, .poster-footer { font-size: .55rem; letter-spacing: .1em; color: #c0c7cf; }
+.poster-title { margin-top: auto; color: var(--ink); font-family: 'Playfair Display', serif; font-size: clamp(1.3rem, 2.4vw, 2rem); line-height: 1.05; overflow-wrap: anywhere; }
+.poster-genres { color: var(--gold-bright); font-size: .62rem; line-height: 1.5; text-transform: uppercase; }
+.poster-footer { border-top: 1px solid rgba(240, 199, 107, .45); padding-top: .7rem; }
+div[data-testid='stForm'] { border: 0; padding: 1.5rem 0 0; }
+div[data-baseweb='select'] > div, div[data-baseweb='input'] > div, div[data-baseweb='textarea'] > div { background: var(--panel); border-color: var(--line); color: var(--ink); }
+div[data-baseweb='select'] input, div[data-baseweb='input'] input { color: var(--ink); }
+div[data-baseweb='popover'] { background: var(--panel); }
+div[data-baseweb='menu'] { background: var(--panel); }
+div[data-baseweb='menu'] li:hover { background: var(--panel-light); }
+button[kind='primary'] { background: var(--gold); border: 0; color: #111820; }
+button[kind='primary']:hover { background: var(--gold-bright); color: #111820; }
+button[kind='secondary'] { background: var(--panel); border-color: var(--line); color: var(--ink); }
+button[kind='secondary']:hover { border-color: var(--gold); color: var(--gold-bright); }
+div[data-testid='stCaptionContainer'], div[data-testid='stMarkdownContainer'] p { color: #c0c7cf; }
+div[data-testid='stExpander'] { border-color: var(--line); background: rgba(21, 27, 35, .65); }
+hr { border-color: var(--line); }
+@media (max-width: 700px) { .block-container { padding: 1rem 1.2rem 3rem; } .hero { min-height: 60vh; padding-top: 10vh; } .hero h1 { font-size: 3.8rem; } .hero-footer { display: block; line-height: 2.2; } .topbar-note { display: none; } }
