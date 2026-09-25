@@ -4,3 +4,16 @@ __pycache__/
 venv/
 .streamlit/
 .DS_Store
+
+# Secrets — never commit
+.env
+
+# Local databases (reset on deploy anyway)
+*.db
+*.sqlite3
+
+# Poster cache (regenerated automatically)
+poster_cache.json
+
+# Test/scratch files
+*.log

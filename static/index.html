@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en" data-mood="joyful">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineMood & Bites | Smart Cinema Recommendations, Food & Drink Pairings & Spotify Soundtracks</title>
+  <meta name="description" content="100% dynamic cinema recommendation engine powered by hybrid collaborative filtering, real-time mood themes, gourmet culinary pairings, and Spotify soundtrack integration.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css?v=3.3">
+</head>
+<body>
+  <!-- Ambient dynamic glow adapted smoothly to active mood -->
+  <div class="ambient-glow" id="ambientGlow"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Main Container -->
+  <div class="app-layout">
+    
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-brand" id="brandHomeBtn" role="button" tabindex="0" title="CineMood & Bites Home">
+        <div class="brand-icon-box">
+          <span class="brand-emoji">🍿</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CineMood<span class="ai-badge">&amp; Bites</span></span>
+          <span class="brand-sub">Cinema &amp; Culinary Experience</span>
+        </div>
+      </div>
+
+      <!-- Real-Time Autocomplete Search Bar -->
+      <div class="search-container" id="searchContainer">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="movieSearchInput" 
+          placeholder="Search movies &amp; TV series by title, director, cast, or genre..." 
+          autocomplete="off"
+          aria-label="Search movies and series by title, director, or actor"
+        >
+        <button class="search-clear-btn" id="searchClearBtn" title="Clear search" style="display: none;">&times;</button>
+        <div class="search-dropdown" id="searchDropdown" style="display: none;"></div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="nav-actions">
+
+        <button class="nav-btn" id="openWatchlistBtn" title="View Watchlist & Movie Night Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Movie Night Menu</span>
+          <span class="counter-badge" id="watchlistCountBadge">0</span>
+        </button>
+
+        <!-- User Authentication Button / Profile Pill -->
+        <div id="authNavContainer">
+          <button class="nav-btn" id="openAuthBtn" title="Sign In or Create Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="authBtnText">Sign In</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero / Mood Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="mood-tagline-wrapper">
+          <span class="hero-pill" id="moodStatusPill">CURRENT VIBE: JOYFUL / UPLIFTING</span>
+          <h1 class="hero-headline" id="heroHeadline">☀️ Joyful Mode</h1>
+          <p class="hero-description" id="heroDescription">
+            Radiant humor, lighthearted adventures, and infectious optimism.
+          </p>
+        </div>
+
+        <!-- 5 Interactive Mood Selectors -->
+        <div class="mood-selector-grid" id="moodSelectorGrid">
+          <button class="mood-card active" data-mood="joyful" id="moodBtnJoyful">
+            <div class="mood-icon">☀️</div>
+            <div class="mood-meta">
+              <span class="mood-name">Joyful / Uplifting</span>
+              <span class="mood-sub">Bright Comedies &amp; Lighthearted Fun</span>
+            </div>
+          </button>
+
+          <button class="mood-card" data-mood="thrilling" id="moodBtnThrilling">
+            <div class="mood-icon">⚡</div>
+            <div class="mood-meta">
+              <span class="mood-name">Dark / Thrilling</span>
+              <span class="mood-sub">High Stakes Suspense &amp; Noir</span>
+            </div>
+          </button>
+
+          <button class="mood-card" data-mood="adventurous" id="moodBtnAdventurous">
+            <div class="mood-icon">🚀</div>
+            <div class="mood-meta">
+              <span class="mood-name">Adventurous / Sci-Fi</span>
+              <span class="mood-sub">Grand Expeditions &amp; Cosmic Quests</span>
+            </div>
+          </button>
+
+          <button class="mood-card" data-mood="cozy" id="moodBtnCozy">
+            <div class="mood-icon">☕</div>
+            <div class="mood-meta">
+              <span class="mood-name">Cozy / Romantic</span>
+              <span class="mood-sub">Heartwarming Love &amp; Gentle Comfort</span>
+            </div>
+          </button>
+
+          <button class="mood-card" data-mood="melancholy" id="moodBtnMelancholy">
+            <div class="mood-icon">🌧️</div>
+            <div class="mood-meta">
+              <span class="mood-name">Melancholy / Deep Thought</span>
+              <span class="mood-sub">Poetic Dramas &amp; Philosophical Reflection</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spotify Ambient Player Banner -->
+    <section class="spotify-banner-section" id="spotifyBannerSection">
+      <div class="spotify-banner-card">
+        <div class="spotify-banner-info">
+          <div class="spotify-icon-badge">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#1db954">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.498 17.305c-.216.353-.674.464-1.027.248-2.812-1.718-6.352-2.107-10.521-1.155-.404.092-.81-.16-.902-.564-.092-.404.16-.81.564-.902 4.563-1.042 8.49-.607 11.638 1.346.353.216.464.674.248 1.027zm1.468-3.262c-.272.443-.852.583-1.295.311-3.218-1.978-8.125-2.55-11.932-1.393-.498.151-1.033-.134-1.184-.632-.151-.498.134-1.033.632-1.184 4.356-1.322 9.775-.683 13.468 1.585.443.272.583.852.311 1.295zm.126-3.41c-3.857-2.29-10.222-2.502-13.887-1.39-.59.18-1.22-.16-1.4-.75-.18-.59.16-1.22.75-1.4 4.218-1.28 11.25-1.033 15.694 1.605.53.315.704 1.004.389 1.534-.315.53-1.004.704-1.534.389z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="spotify-banner-title" id="spotifyBannerTitle">Feel-Good Cinematic Uplift</div>
+            <div class="spotify-banner-sub" id="spotifyBannerSub">Official Cinema Vibe Soundtrack • Auto-tuned to current mood</div>
+          </div>
+        </div>
+        <div class="spotify-embed-wrapper" id="spotifyEmbedWrapper">
+          <iframe 
+            id="spotifyPlayerIframe"
+            src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC?utm_source=generator&theme=0" 
+            width="100%" 
+            height="80" 
+            frameBorder="0" 
+            allowfullscreen="" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Rate Starter Bar -->
+    <section class="quick-rate-banner" id="quickRateBanner">
+      <div class="quick-rate-content">
+        <div class="quick-rate-info">
+          <span class="sparkle-icon">✨</span>
+          <div>
+            <strong>Interactive Taste Calibration:</strong>
+            <span>Rate beloved films to immediately train the Collaborative Filtering ML model!</span>
+          </div>
+        </div>
+        <div class="quick-rate-chips" id="quickRateChips"></div>
+      </div>
+    </section>
+
+    <!-- Main Content Area: Filter Sidebar + Recommendations Grid -->
+    <main class="main-content">
+      
+      <!-- Filter Sidebar -->
+      <aside class="filter-sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-title-group">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <h3>Filter &amp; Fine-Tune</h3>
+          </div>
+          <button class="text-btn" id="resetFiltersBtn">Reset</button>
+        </div>
+
+        <!-- Format Filter (Movies vs Series vs All) -->
+        <div class="filter-group">
+          <label>Format</label>
+          <div class="format-toggle-group" id="sidebarFormatToggle">
+            <button class="format-btn active" data-type="all">✨ All</button>
+            <button class="format-btn" data-type="Movie">🎬 Movies</button>
+            <button class="format-btn" data-type="Series">📺 TV Series</button>
+          </div>
+        </div>
+
+        <!-- Hybrid Balance Slider (Mood vs Personal Taste) -->
+        <div class="filter-group">
+          <div class="filter-label-row">
+            <label for="balanceSlider">Algorithm Blend</label>
+            <span class="slider-badge" id="balanceBadge">Balanced (50/50)</span>
+          </div>
+          <input type="range" id="balanceSlider" min="0" max="100" value="50" step="5">
+          <div class="slider-endpoints">
+            <span>Personal Ratings</span>
+            <span>Mood Bias</span>
+          </div>
+        </div>
+
+        <!-- Rating Threshold Slider -->
+        <div class="filter-group">
+          <div class="filter-label-row">
+            <label for="minRatingSlider">Minimum Score</label>
+            <span class="slider-badge" id="ratingValueBadge">3.0★ &amp; up</span>
+          </div>
+          <input type="range" id="minRatingSlider" min="0" max="4.5" value="3.0" step="0.5">
+        </div>
+
+        <!-- Release Decade Filter -->
+        <div class="filter-group">
+          <label for="decadeSelect">Release Era / Decade</label>
+          <div class="select-wrapper">
+            <select id="decadeSelect">
+              <option value="All">All Eras &amp; Decades</option>
+              <option value="2020s">2020s Modern Releases</option>
+              <option value="2010s">2010s Cinema</option>
+              <option value="2000s">2000s Hits</option>
+              <option value="1990s">1990s Golden Era</option>
+              <option value="1980s">1980s Classics</option>
+              <option value="Classic">Pre-1980 Classics</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Genre Multi-Select Filter -->
+        <div class="filter-group">
+          <div class="filter-label-row">
+            <label>Genre Preferences</label>
+            <span class="filter-helper" id="selectedGenresCount">All Genres</span>
+          </div>
+          <div class="genre-chips-container" id="genreChipsContainer"></div>
+        </div>
+      </aside>
+
+      <!-- Recommendation Results Section -->
+      <section class="results-section">
+        <!-- View Mode Tab Toggle & Format Switcher -->
+        <div class="toolbar-row">
+          <div class="view-tabs" id="viewTabs">
+            <button class="view-tab active" id="tabForYou" data-tab="recommendations">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              For You (Recommendations)
+            </button>
+            <button class="view-tab" id="tabBrowse" data-tab="catalog">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              Browse Full Catalog
+            </button>
+          </div>
+
+          <div class="format-pills" id="formatPills">
+            <button class="format-pill active" data-type="all">✨ All Formats</button>
+            <button class="format-pill" data-type="Movie">🎬 Movies</button>
+            <button class="format-pill" data-type="Series">📺 TV Series</button>
+          </div>
+        </div>
+
+        <div class="results-header">
+          <div class="results-meta">
+            <h2 class="results-title" id="resultsTitle">Curated Films &amp; Pairings</h2>
+            <p class="results-subtitle" id="resultsSubtitle">
+              Calculated using hybrid item-item collaborative similarity and active mood weights
+            </p>
+          </div>
+          <div class="results-controls">
+            <span class="results-count" id="resultsCount">Loading matches...</span>
+            <button class="refresh-btn" id="refreshRecsBtn" title="Recalculate Recommendations">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6"></path>
+                <path d="M1 20v-6h6"></path>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading Skeleton / Spinner -->
+        <div class="loading-state" id="loadingState" style="display: none;">
+          <div class="spinner"></div>
+          <p>Computing hybrid similarity matrix &amp; curating culinary pairings...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-icon">🎬</div>
+          <h3>No films matched your active filters</h3>
+          <p>Try lowering the minimum rating slider or resetting restrictive genre filters.</p>
+          <button class="primary-btn" id="emptyResetBtn">Reset All Filters</button>
+        </div>
+
+        <!-- Movie Grid -->
+        <div class="movie-grid" id="movieGrid" style="display: grid;"></div>
+
+        <!-- Infinite Scroll Sentinel & Load More -->
+        <div id="catalogLoadMore" style="display:none; text-align:center; padding:2rem 0;">
+          <button class="primary-btn" id="loadMoreBtn" style="min-width:180px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:0.4rem;">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+            Load More Films
+          </button>
+          <div id="catalogPageInfo" style="margin-top:0.6rem;font-size:0.8rem;color:var(--text-muted);"></div>
+        </div>
+        <div id="infiniteScrollSentinel" style="height:1px;"></div>
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         Slide-Over Drawer: Watchlist & Movie Night Menu
+         ==================================================================== -->
+    <div class="drawer-backdrop" id="watchlistBackdrop"></div>
+    <aside class="ratings-drawer watchlist-drawer" id="watchlistDrawer" aria-label="Watchlist and Movie Night Menu">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <span style="font-size: 1.4rem;">🍿</span>
+          <div>
+            <h3>Movie Night Menu</h3>
+            <span class="drawer-subtitle" id="watchlistSubtitle">Saved films &amp; culinary pairings</span>
+          </div>
+        </div>
+        <button class="close-btn" id="closeWatchlistBtn" aria-label="Close watchlist drawer">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="menu-action-banner">
+          <p>Ready for movie night? Copy your curated film schedule, food recipes, and cocktail menu with one click.</p>
+          <button class="copy-plan-btn" id="copyPlanBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy Movie Night Plan &amp; Menu</span>
+          </button>
+        </div>
+
+        <div class="watchlist-items-list" id="watchlistItemsList"></div>
+
+        <div class="drawer-footer">
+          <button class="danger-btn" id="clearWatchlistBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Clear Watchlist</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         Modal 1: Dedicated Movie Detail, Pairings & Related Recommendations
+         ==================================================================== -->
+    <div class="modal-backdrop" id="movieDetailModalBackdrop">
+      <div class="modal-card detail-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="detail-modal-emoji">🎬</span>
+            <div>
+              <h3 id="modalMovieTitle">Movie Title</h3>
+              <p class="modal-sub" id="modalMovieSub">Director • Year • Genres</p>
+            </div>
+          </div>
+          <button class="close-btn" id="closeDetailModalBtn" aria-label="Close movie detail modal">&times;</button>
+        </div>
+
+        <div class="modal-body detail-modal-body">
+          <div class="detail-hero-layout">
+            <!-- Poster Display -->
+            <div class="detail-poster-wrapper">
+              <img id="modalMoviePoster" class="detail-poster-img" src="" alt="Movie Poster" loading="lazy">
+              <button class="modal-watchlist-btn" id="modalWatchlistBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span id="modalWatchlistText">Add to Movie Night Menu</span>
+              </button>
+            </div>
+
+            <!-- Metadata & Overview -->
+            <div class="detail-info-col">
+              <div class="detail-rating-banner">
+                <div class="detail-rating-stat">
+                  <span class="star-icon-gold">★</span>
+                  <strong id="modalMovieRating">--</strong>
+                  <span id="modalMovieVotes">(-- votes)</span>
+                </div>
+                <div class="modal-interactive-rate">
+                  <span class="modal-rate-label">Your Rating:</span>
+                  <div class="star-picker" id="modalStarPicker"></div>
+                </div>
+              </div>
+
+              <div class="detail-meta-specs">
+                <div class="detail-spec-item" id="modalDirectorRow">
+                  <span class="spec-label">Director:</span>
+                  <span class="spec-value" id="modalDirectorText">--</span>
+                </div>
+                <div class="detail-spec-item" id="modalCastRow">
+                  <span class="spec-label">Starring:</span>
+                  <span class="spec-value" id="modalCastText">--</span>
+                </div>
+                <div class="detail-spec-item">
+                  <span class="spec-label">Genres:</span>
+                  <span class="spec-value" id="modalGenresText">--</span>
+                </div>
+              </div>
+
+              <div class="detail-overview-box">
+                <h4>Synopsis</h4>
+                <p id="modalOverviewText">--</p>
+              </div>
+
+              <!-- Movie Night Pairings Showcase -->
+              <div class="detail-pairings-container">
+                <div class="pairings-header">
+                  <span class="pairings-title-icon">🍿</span>
+                  <h4>Movie Night Pairings</h4>
+                  <span class="pairings-badge">Chef &amp; Sommelier Curated</span>
+                </div>
+                
+                <div class="pairings-grid">
+                  <div class="pairing-item food-item">
+                    <div class="pairing-icon">🍿</div>
+                    <div class="pairing-text">
+                      <span class="pairing-category">Food Pairing</span>
+                      <strong id="modalPairingFood">--</strong>
+                      <p id="modalPairingFoodDesc">--</p>
+                    </div>
+                  </div>
+
+                  <div class="pairing-item drink-item">
+                    <div class="pairing-icon">🍸</div>
+                    <div class="pairing-text">
+                      <span class="pairing-category">Drink Pairing</span>
+                      <strong id="modalPairingDrink">--</strong>
+                      <p id="modalPairingDrinkDesc">--</p>
+                    </div>
+                  </div>
+
+                  <div class="pairing-item vibe-item">
+                    <div class="pairing-icon" id="modalPairingVibeIcon">🕯️</div>
+                    <div class="pairing-text">
+                      <span class="pairing-category">Ambiance &amp; Lighting</span>
+                      <strong id="modalPairingVibe">--</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Related Movies Section -->
+          <div class="detail-related-section">
+            <div class="related-header">
+              <h4>Similar Films You'll Love</h4>
+              <span class="related-hint">Computed with Hybrid TF-IDF &amp; Item Cosine Similarity</span>
+            </div>
+            <div class="related-cards-grid" id="modalRelatedGrid"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="primary-btn" id="dismissDetailModalBtn">Close Details</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal-backdrop" id="authModalBackdrop">
+      <div class="modal-card auth-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="brand-emoji">🍿</span>
+            <div>
+              <h3 id="authModalTitle">Welcome to CineMood</h3>
+              <p class="modal-sub">Sign in to sync your ratings, watchlist, and personalized mood taste</p>
+            </div>
+          </div>
+          <button class="close-btn" id="closeAuthModalBtn">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tabSignIn">Sign In</button>
+            <button class="auth-tab" id="tabRegister">Create Account</button>
+          </div>
+
+          <!-- Auth Notice / Error -->
+          <div class="auth-notice" id="authNotice" style="display: none;"></div>
+
+          <!-- Sign In Form -->
+          <form id="signInForm" class="auth-form">
+            <div class="form-group">
+              <label for="loginUsername">Username</label>
+              <input type="text" id="loginUsername" placeholder="Enter your username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="primary-btn auth-submit-btn" id="loginSubmitBtn">
+              <span>Sign In</span>
+            </button>
+          </form>
+
+          <!-- Register Form -->
+          <form id="registerForm" class="auth-form" style="display: none;">
+            <div class="form-group">
+              <label for="regDisplayName">Display Name (Optional)</label>
+              <input type="text" id="regDisplayName" placeholder="e.g. CinemaLover">
+            </div>
+            <div class="form-group">
+              <label for="regUsername">Username</label>
+              <input type="text" id="regUsername" placeholder="Choose a username (min 3 chars)" required autocomplete="username">
+            </div>
+            <div class="form-group">
+              <label for="regPassword">Password</label>
+              <input type="password" id="regPassword" placeholder="Choose a password (min 4 chars)" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="primary-btn auth-submit-btn" id="regSubmitBtn">
+              <span>Create Account</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  </div>
+
+  <script src="/static/app.js?v=3.3"></script>
+</body>
+</html>
